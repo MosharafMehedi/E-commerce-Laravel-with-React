@@ -125,7 +125,6 @@ export default function Dashboard({ auth }) {
                                     <Order id="#10231" name="Ayesha Rahman" total="$120" status="Paid" />
                                     <Order id="#10232" name="John Smith" total="$340" status="Pending" />
                                     <Order id="#10233" name="Hasan Ali" total="$89" status="Shipped" />
-                                    <Order id="#10233" name="Hasan Ali" total="$89" status="Shipped" />
                                 </tbody>
                             </table>
                         </div>
