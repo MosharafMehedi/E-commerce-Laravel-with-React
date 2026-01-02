@@ -149,7 +149,7 @@ export default function Login({ status, canResetPassword }) {
                                 href={route('register')}
                                 className="font-medium text-indigo-600 hover:underline"
                             >
-                                Create one
+                                Create an account
                             </Link>
                         </p>
                     </div>
