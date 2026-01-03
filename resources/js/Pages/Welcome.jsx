@@ -1,39 +1,63 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from "@inertiajs/react";
+import ApplicationLogo from "@/Components/ApplicationLogo";
 
 export default function Welcome({ auth }) {
+    const primaryColor = "#3CA3E8"; // Changed from indigo to green
+
     return (
         <>
             <Head title="ShopSmart – Modern E-Commerce" />
 
-            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-slate-100">
+            <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-slate-100">
                 {/* Navbar */}
                 <header className="sticky top-0 z-50 backdrop-blur bg-white/70 border-b">
-                    <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-                        <h1 className="text-2xl font-extrabold text-indigo-600">
-                            ShopSmart
-                        </h1>
+                    <div className="mx-auto max-w-8xl px-4 flex items-center justify-between">
+                        {/* Logo */}
+                        <Link href="/" className="flex items-center gap-3">
+                            <ApplicationLogo
+                                className="h-10 w-auto"
+                                style={{ fill: primaryColor }}
+                            />
+                            <div className="hidden sm:flex items-center pl-4 border-l border-gray-200">
+                                <div className="flex flex-col">
+                                    <span className="text-xl font-bold leading-tight" style={{ color: primaryColor }}>
+                                        M SHOPPING
+                                    </span>
+                                    <span className="text-xs text-gray-500 font-medium">
+                                        Premium Online Retail
+                                    </span>
+                                </div>
+                            </div>
+                        </Link>
 
+                        {/* Navigation */}
                         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-                            <NavLink label="Home" />
-                            <NavLink label="Products" />
-                            <NavLink label="Categories" />
-                            <NavLink label="Contact" />
+                            <NavLink label="Home" color={primaryColor} />
+                            <NavLink label="Products" color={primaryColor} />
+                            <NavLink label="Categories" color={primaryColor} />
+                            <NavLink label="Contact" color={primaryColor} />
 
                             {auth?.user ? (
                                 <Link
-                                    href={route('dashboard')}
-                                    className="rounded-lg bg-indigo-600 px-5 py-2 text-white hover:bg-indigo-700"
+                                    href={route("dashboard")}
+                                    className="rounded-lg px-5 py-2 text-white font-medium hover:opacity-90"
+                                    style={{ backgroundColor: primaryColor }}
                                 >
                                     Dashboard
                                 </Link>
                             ) : (
                                 <>
-                                    <Link href={route('login')} className="text-indigo-600">
+                                    <Link
+                                        href={route("login")}
+                                        className="font-medium"
+                                        style={{ color: primaryColor }}
+                                    >
                                         Login
                                     </Link>
                                     <Link
-                                        href={route('register')}
-                                        className="rounded-lg bg-indigo-600 px-5 py-2 text-white hover:bg-indigo-700"
+                                        href={route("register")}
+                                        className="ml-4 rounded-lg px-5 py-2 text-white font-medium hover:opacity-90"
+                                        style={{ backgroundColor: primaryColor }}
                                     >
                                         Get Started
                                     </Link>
@@ -45,12 +69,12 @@ export default function Welcome({ auth }) {
 
                 {/* Hero */}
                 <section className="relative overflow-hidden">
-                    <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-indigo-300 opacity-30 blur-3xl" />
-                    <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-purple-300 opacity-30 blur-3xl" />
+                    <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-green-300 opacity-30 blur-3xl" />
+                    <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-green-200 opacity-30 blur-3xl" />
 
                     <div className="relative mx-auto max-w-7xl px-6 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                         <div>
-                            <span className="inline-block mb-4 rounded-full bg-indigo-100 px-4 py-1 text-sm font-semibold text-indigo-600">
+                            <span className="inline-block mb-4 rounded-full px-4 py-1 text-sm font-semibold" style={{ backgroundColor: "#D1F7D3", color: primaryColor }}>
                                 #1 Smart Online Shop
                             </span>
 
@@ -60,14 +84,15 @@ export default function Welcome({ auth }) {
                             </h2>
 
                             <p className="mt-6 text-slate-600 text-lg">
-                                Discover premium products with fast delivery, secure checkout,
-                                and trusted sellers worldwide.
+                                Discover premium products with fast delivery,
+                                secure checkout, and trusted sellers worldwide.
                             </p>
 
                             <div className="mt-8 flex flex-wrap gap-4">
                                 <Link
-                                    href={route('register')}
-                                    className="rounded-xl bg-indigo-600 px-8 py-4 text-white font-semibold shadow-lg hover:bg-indigo-700"
+                                    href={route("register")}
+                                    className="rounded-xl px-8 py-4 text-white font-semibold shadow-lg hover:opacity-90"
+                                    style={{ backgroundColor: primaryColor }}
                                 >
                                     Start Shopping
                                 </Link>
@@ -84,10 +109,10 @@ export default function Welcome({ auth }) {
                         <div className="relative">
                             <div className="rounded-3xl bg-white/80 backdrop-blur p-8 shadow-2xl">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <HeroCard title="Orders" value="12k+" />
-                                    <HeroCard title="Customers" value="8k+" />
-                                    <HeroCard title="Products" value="1.5k+" />
-                                    <HeroCard title="Reviews" value="5★" />
+                                    <HeroCard title="Orders" value="12k+" color={primaryColor} />
+                                    <HeroCard title="Customers" value="8k+" color={primaryColor} />
+                                    <HeroCard title="Products" value="1.5k+" color={primaryColor} />
+                                    <HeroCard title="Reviews" value="5★" color={primaryColor} />
                                 </div>
                             </div>
                         </div>
@@ -116,14 +141,14 @@ export default function Welcome({ auth }) {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             {[1, 2, 3, 4].map((i) => (
-                                <ProductCard key={i} />
+                                <ProductCard key={i} color={primaryColor} />
                             ))}
                         </div>
                     </div>
                 </section>
 
                 {/* CTA */}
-                <section className="relative py-24 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                <section className="relative py-24 text-white" style={{ background: `linear-gradient(to right, ${primaryColor}, #6FCF97)` }}>
                     <div className="mx-auto max-w-7xl px-6 text-center">
                         <h3 className="text-4xl font-extrabold">
                             Ready to Elevate Your Shopping?
@@ -132,8 +157,9 @@ export default function Welcome({ auth }) {
                             Join thousands of happy customers today.
                         </p>
                         <Link
-                            href={route('register')}
-                            className="inline-block mt-8 rounded-xl bg-white px-10 py-4 text-indigo-600 font-bold shadow-lg hover:bg-slate-100"
+                            href={route("register")}
+                            className="inline-block mt-8 rounded-xl px-10 py-4 text-white font-bold shadow-lg hover:opacity-90"
+                            style={{ backgroundColor: "#FFFFFF", color: primaryColor }}
                         >
                             Create Free Account
                         </Link>
@@ -158,9 +184,9 @@ export default function Welcome({ auth }) {
 
 /* Components */
 
-function NavLink({ label }) {
+function NavLink({ label, color }) {
     return (
-        <a href="#" className="hover:text-indigo-600 transition">
+        <a href="#" className="hover:opacity-90 transition" style={{ color }}>
             {label}
         </a>
     );
@@ -178,24 +204,29 @@ function Feature({ icon, title }) {
     );
 }
 
-function HeroCard({ title, value }) {
+function HeroCard({ title, value, color }) {
     return (
-        <div className="rounded-2xl bg-indigo-50 p-6 text-center">
+        <div className="rounded-2xl bg-green-50 p-6 text-center">
             <p className="text-sm text-slate-500">{title}</p>
-            <p className="mt-2 text-2xl font-bold text-indigo-600">{value}</p>
+            <p className="mt-2 text-2xl font-bold" style={{ color }}>
+                {value}
+            </p>
         </div>
     );
 }
 
-function ProductCard() {
+function ProductCard({ color }) {
     return (
         <div className="rounded-2xl border bg-white p-4 hover:shadow-lg transition">
-            <div className="h-40 rounded-xl bg-slate-100 flex items-center justify-center text-4xl">
+            <div className="h-40 rounded-xl bg-green-100 flex items-center justify-center text-4xl">
                 📦
             </div>
             <h4 className="mt-4 font-semibold">Premium Product</h4>
             <p className="text-sm text-slate-500">$120.00</p>
-            <button className="mt-4 w-full rounded-lg bg-indigo-600 py-2 text-white font-semibold hover:bg-indigo-700">
+            <button
+                className="mt-4 w-full rounded-lg py-2 text-white font-semibold hover:opacity-90"
+                style={{ backgroundColor: color }}
+            >
                 Add to Cart
             </button>
         </div>
