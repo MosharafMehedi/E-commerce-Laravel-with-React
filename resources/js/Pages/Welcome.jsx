@@ -1,135 +1,156 @@
 import { Head, Link } from '@inertiajs/react';
 
-export default function Dashboard({ auth }) {
+export default function Welcome({ auth }) {
     return (
         <>
-            <Head title="Admin Dashboard" />
+            <Head title="ShopSmart – Modern E-Commerce" />
 
-            <div className="flex min-h-screen bg-slate-100">
-                {/* Sidebar */}
-                <aside className="w-64 bg-slate-900 text-white hidden lg:flex flex-col">
-                    <div className="px-6 py-5 text-2xl font-bold text-indigo-400">
-                        ShopAdmin
-                    </div>
-
-                    <nav className="flex-1 px-4 space-y-2">
-                        <SidebarLink label="Dashboard" />
-                        <SidebarLink label="Orders" />
-                        <SidebarLink label="Products" />
-                        <SidebarLink label="Customers" />
-                        <SidebarLink label="Reports" />
-                        <SidebarLink label="Settings" />
-                    </nav>
-
-                    <div className="px-6 py-4 border-t border-slate-700">
-                        <Link
-                            href={route('logout')}
-                            method="post"
-                            as="button"
-                            className="w-full rounded-lg bg-red-500 py-2 text-sm font-semibold hover:bg-red-600"
-                        >
-                            Logout
-                        </Link>
-                    </div>
-                </aside>
-
-                {/* Main */}
-                <div className="flex-1 flex flex-col">
-                    {/* Topbar */}
-                    <header className="flex items-center justify-between bg-white px-6 py-4 shadow">
-                        <h1 className="text-xl font-bold text-slate-800">
-                            Dashboard
+            <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-slate-100">
+                {/* Navbar */}
+                <header className="sticky top-0 z-50 backdrop-blur bg-white/70 border-b">
+                    <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+                        <h1 className="text-2xl font-extrabold text-indigo-600">
+                            ShopSmart
                         </h1>
 
-                        <div className="flex items-center gap-4">
-                            <span className="text-slate-600 text-sm">
-                                {auth?.user?.name}
-                            </span>
+                        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+                            <NavLink label="Home" />
+                            <NavLink label="Products" />
+                            <NavLink label="Categories" />
+                            <NavLink label="Contact" />
 
-                            {!auth?.user && (
+                            {auth?.user ? (
+                                <Link
+                                    href={route('dashboard')}
+                                    className="rounded-lg bg-indigo-600 px-5 py-2 text-white hover:bg-indigo-700"
+                                >
+                                    Dashboard
+                                </Link>
+                            ) : (
                                 <>
-                                    <Link href={route('login')} className="text-sm text-indigo-600">
+                                    <Link href={route('login')} className="text-indigo-600">
                                         Login
                                     </Link>
                                     <Link
                                         href={route('register')}
-                                        className="rounded bg-indigo-600 px-4 py-2 text-sm text-white"
+                                        className="rounded-lg bg-indigo-600 px-5 py-2 text-white hover:bg-indigo-700"
                                     >
-                                        Register
+                                        Get Started
                                     </Link>
                                 </>
                             )}
-                        </div>
-                    </header>
+                        </nav>
+                    </div>
+                </header>
 
-                    {/* Content */}
-                    <main className="p-6 space-y-8">
-                        {/* Stats */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <Stat title="Total Sales" value="$84,230" trend="+12%" />
-                            <Stat title="Orders" value="1,482" trend="+8%" />
-                            <Stat title="Customers" value="3,290" trend="+5%" />
-                            <Stat title="Products" value="540" trend="-2%" negative />
-                        </div>
+                {/* Hero */}
+                <section className="relative overflow-hidden">
+                    <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-indigo-300 opacity-30 blur-3xl" />
+                    <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-purple-300 opacity-30 blur-3xl" />
 
-                        {/* Sales Overview */}
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <div className="lg:col-span-2 rounded-xl bg-white p-6 shadow">
-                                <h2 className="font-semibold mb-4">
-                                    Sales Overview
-                                </h2>
+                    <div className="relative mx-auto max-w-7xl px-6 py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div>
+                            <span className="inline-block mb-4 rounded-full bg-indigo-100 px-4 py-1 text-sm font-semibold text-indigo-600">
+                                #1 Smart Online Shop
+                            </span>
 
-                                <div className="h-64 flex items-center justify-center text-slate-400">
-                                    📊 Chart Area (Recharts / Chart.js)
-                                </div>
-                            </div>
-
-                            <div className="rounded-xl bg-white p-6 shadow">
-                                <h2 className="font-semibold mb-4">
-                                    Quick Stats
-                                </h2>
-
-                                <ul className="space-y-3 text-sm">
-                                    <li className="flex justify-between">
-                                        <span>Pending Orders</span>
-                                        <span className="font-semibold">42</span>
-                                    </li>
-                                    <li className="flex justify-between">
-                                        <span>Completed Orders</span>
-                                        <span className="font-semibold">1,320</span>
-                                    </li>
-                                    <li className="flex justify-between">
-                                        <span>Refunds</span>
-                                        <span className="font-semibold">18</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Recent Orders */}
-                        <div className="rounded-xl bg-white p-6 shadow">
-                            <h2 className="mb-4 font-semibold">
-                                Recent Orders
+                            <h2 className="text-5xl font-extrabold leading-tight text-slate-800">
+                                Shop Smarter <br />
+                                Live Better
                             </h2>
 
-                            <table className="w-full text-sm">
-                                <thead>
-                                    <tr className="text-left text-slate-500 border-b">
-                                        <th className="py-2">Order</th>
-                                        <th>Customer</th>
-                                        <th>Total</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <Order id="#10231" name="Ayesha Rahman" total="$120" status="Paid" />
-                                    <Order id="#10232" name="John Smith" total="$340" status="Pending" />
-                                    <Order id="#10233" name="Hasan Ali" total="$89" status="Shipped" />
-                                </tbody>
-                            </table>
+                            <p className="mt-6 text-slate-600 text-lg">
+                                Discover premium products with fast delivery, secure checkout,
+                                and trusted sellers worldwide.
+                            </p>
+
+                            <div className="mt-8 flex flex-wrap gap-4">
+                                <Link
+                                    href={route('register')}
+                                    className="rounded-xl bg-indigo-600 px-8 py-4 text-white font-semibold shadow-lg hover:bg-indigo-700"
+                                >
+                                    Start Shopping
+                                </Link>
+                                <Link
+                                    href="#"
+                                    className="rounded-xl bg-white px-8 py-4 font-semibold shadow hover:bg-slate-100"
+                                >
+                                    View Products
+                                </Link>
+                            </div>
                         </div>
-                    </main>
-                </div>
+
+                        {/* Hero Card */}
+                        <div className="relative">
+                            <div className="rounded-3xl bg-white/80 backdrop-blur p-8 shadow-2xl">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <HeroCard title="Orders" value="12k+" />
+                                    <HeroCard title="Customers" value="8k+" />
+                                    <HeroCard title="Products" value="1.5k+" />
+                                    <HeroCard title="Reviews" value="5★" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Features */}
+                <section className="mx-auto max-w-7xl px-6 py-24">
+                    <h3 className="text-center text-3xl font-bold mb-16">
+                        Why ShopSmart?
+                    </h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <Feature icon="🚀" title="Fast Delivery" />
+                        <Feature icon="🔐" title="Secure Payments" />
+                        <Feature icon="💎" title="Premium Quality" />
+                    </div>
+                </section>
+
+                {/* Featured Products */}
+                <section className="bg-white py-24">
+                    <div className="mx-auto max-w-7xl px-6">
+                        <h3 className="text-3xl font-bold mb-12 text-center">
+                            Featured Products
+                        </h3>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {[1, 2, 3, 4].map((i) => (
+                                <ProductCard key={i} />
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* CTA */}
+                <section className="relative py-24 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                    <div className="mx-auto max-w-7xl px-6 text-center">
+                        <h3 className="text-4xl font-extrabold">
+                            Ready to Elevate Your Shopping?
+                        </h3>
+                        <p className="mt-4 text-lg opacity-90">
+                            Join thousands of happy customers today.
+                        </p>
+                        <Link
+                            href={route('register')}
+                            className="inline-block mt-8 rounded-xl bg-white px-10 py-4 text-indigo-600 font-bold shadow-lg hover:bg-slate-100"
+                        >
+                            Create Free Account
+                        </Link>
+                    </div>
+                </section>
+
+                {/* Footer */}
+                <footer className="bg-slate-900 text-slate-400 py-10">
+                    <div className="mx-auto max-w-7xl px-6 flex justify-between text-sm">
+                        <p>© {new Date().getFullYear()} ShopSmart</p>
+                        <div className="flex gap-6">
+                            <a href="#">Privacy</a>
+                            <a href="#">Terms</a>
+                            <a href="#">Support</a>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </>
     );
@@ -137,50 +158,46 @@ export default function Dashboard({ auth }) {
 
 /* Components */
 
-function SidebarLink({ label }) {
+function NavLink({ label }) {
     return (
-        <a
-            href="#"
-            className="block rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white"
-        >
+        <a href="#" className="hover:text-indigo-600 transition">
             {label}
         </a>
     );
 }
 
-function Stat({ title, value, trend, negative }) {
+function Feature({ icon, title }) {
     return (
-        <div className="rounded-xl bg-white p-6 shadow">
-            <p className="text-sm text-slate-500">{title}</p>
-            <p className="mt-2 text-2xl font-bold">{value}</p>
-            <p
-                className={`mt-1 text-sm font-semibold ${
-                    negative ? 'text-red-500' : 'text-green-500'
-                }`}
-            >
-                {trend}
+        <div className="rounded-3xl bg-white p-10 text-center shadow hover:shadow-xl transition">
+            <div className="text-5xl">{icon}</div>
+            <h4 className="mt-6 text-xl font-bold">{title}</h4>
+            <p className="mt-3 text-slate-600">
+                Experience top-notch service designed for modern shoppers.
             </p>
         </div>
     );
 }
 
-function Order({ id, name, total, status }) {
-    const badge = {
-        Paid: 'bg-green-100 text-green-700',
-        Pending: 'bg-yellow-100 text-yellow-700',
-        Shipped: 'bg-blue-100 text-blue-700',
-    };
-
+function HeroCard({ title, value }) {
     return (
-        <tr className="border-b last:border-none">
-            <td className="py-3 font-medium">{id}</td>
-            <td>{name}</td>
-            <td>{total}</td>
-            <td>
-                <span className={`rounded-full px-3 py-1 text-xs font-semibold ${badge[status]}`}>
-                    {status}
-                </span>
-            </td>
-        </tr>
+        <div className="rounded-2xl bg-indigo-50 p-6 text-center">
+            <p className="text-sm text-slate-500">{title}</p>
+            <p className="mt-2 text-2xl font-bold text-indigo-600">{value}</p>
+        </div>
+    );
+}
+
+function ProductCard() {
+    return (
+        <div className="rounded-2xl border bg-white p-4 hover:shadow-lg transition">
+            <div className="h-40 rounded-xl bg-slate-100 flex items-center justify-center text-4xl">
+                📦
+            </div>
+            <h4 className="mt-4 font-semibold">Premium Product</h4>
+            <p className="text-sm text-slate-500">$120.00</p>
+            <button className="mt-4 w-full rounded-lg bg-indigo-600 py-2 text-white font-semibold hover:bg-indigo-700">
+                Add to Cart
+            </button>
+        </div>
     );
 }
