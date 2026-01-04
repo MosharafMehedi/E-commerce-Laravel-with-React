@@ -10,7 +10,7 @@ export default function AuthenticatedLayout({ children }) {
     const user = usePage().props.auth.user;
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col">
+        <div className="min-h-screen bg-gray-200 flex flex-col">
             <Header />
 
             <div className="flex flex-1">
