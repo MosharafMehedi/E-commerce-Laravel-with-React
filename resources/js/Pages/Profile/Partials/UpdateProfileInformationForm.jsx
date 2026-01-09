@@ -20,14 +20,13 @@ export default function UpdateProfileInformation({
 
     const submit = (e) => {
         e.preventDefault();
-
         patch(route('profile.update'));
     };
 
     return (
-        <section className={className}>
+        <section className={`${className} bg-white p-6 rounded-xl shadow-sm`}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-semibold text-[#3CA3E8]">
                     Profile Information
                 </h2>
 
@@ -42,7 +41,7 @@ export default function UpdateProfileInformation({
 
                     <TextInput
                         id="name"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full border-gray-300 focus:border-[#3CA3E8] focus:ring-[#3CA3E8]"
                         value={data.name}
                         onChange={(e) => setData('name', e.target.value)}
                         required
@@ -59,7 +58,7 @@ export default function UpdateProfileInformation({
                     <TextInput
                         id="email"
                         type="email"
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full border-gray-300 focus:border-[#3CA3E8] focus:ring-[#3CA3E8]"
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
                         required
@@ -70,14 +69,14 @@ export default function UpdateProfileInformation({
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (
-                    <div>
-                        <p className="mt-2 text-sm text-gray-800">
+                    <div className="rounded-lg bg-blue-50 p-4">
+                        <p className="text-sm text-gray-700">
                             Your email address is unverified.
                             <Link
                                 href={route('verification.send')}
                                 method="post"
                                 as="button"
-                                className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                className="ml-1 text-sm font-medium text-[#3CA3E8] underline hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-[#3CA3E8] focus:ring-offset-2"
                             >
                                 Click here to re-send the verification email.
                             </Link>
@@ -85,15 +84,19 @@ export default function UpdateProfileInformation({
 
                         {status === 'verification-link-sent' && (
                             <div className="mt-2 text-sm font-medium text-green-600">
-                                A new verification link has been sent to your
-                                email address.
+                                A new verification link has been sent to your email address.
                             </div>
                         )}
                     </div>
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton
+                        disabled={processing}
+                        className="bg-[#3CA3E8] hover:bg-[#3496d4] focus:ring-[#3CA3E8]"
+                    >
+                        Save
+                    </PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -102,8 +105,8 @@ export default function UpdateProfileInformation({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">
-                            Saved.
+                        <p className="text-sm font-medium text-[#3CA3E8]">
+                            Saved successfully!
                         </p>
                     </Transition>
                 </div>
