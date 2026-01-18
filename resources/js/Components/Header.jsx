@@ -54,7 +54,7 @@ export default function Header({ onMenuClick }) {
                                 className="h-4 w-4 text-gray-400 transition-transform duration-200 group-hover:rotate-180"
                                 fill="none"
                                 stroke="currentColor"
-                                viewBox="0 0 24 2"
+                                viewBox="0 0 24 24"
                             >
                                 <path
                                     strokeLinecap="round"
