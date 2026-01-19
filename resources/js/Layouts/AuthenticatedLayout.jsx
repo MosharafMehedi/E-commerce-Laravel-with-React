@@ -8,23 +8,28 @@ import Footer from "@/Components/Footer";
 export default function AuthenticatedLayout({ children }) {
     const user = usePage().props.auth.user;
 
-    const [sidebarOpen, setSidebarOpen] = useState(false); // mobile
-    const [collapsed, setCollapsed] = useState(false); // desktop
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col">
-            {/* Header */}
-            <Header onMenuClick={() => setSidebarOpen(true)} />
+        <div className="flex flex-col min-h-screen bg-gray-100">
 
-            <div className="flex flex-1 relative">
+            {/* Fixed Header */}
+            <div className="fixed top-0 left-0 right-0 z-50">
+                <Header onMenuClick={() => setSidebarOpen(true)} />
+            </div>
+
+            {/* Body with sidebar + main */}
+            <div className="flex flex-1 pt-16">
                 {/* Sidebar */}
                 <aside
                     className={`
-                        fixed inset-y-0 left-0 z-40 bg-white shadow-lg
-                        transform transition-transform duration-300
+                        fixed top-16 left-0 bottom-0 z-40 bg-white shadow-lg
+                        transition-all duration-300
                         ${collapsed ? "w-20" : "w-64"}
                         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-                        md:relative md:translate-x-0
+                        md:translate-x-0
+                        overflow-y-auto
                     `}
                 >
                     <Sidebar
@@ -34,7 +39,7 @@ export default function AuthenticatedLayout({ children }) {
                     />
                 </aside>
 
-                {/* Overlay (mobile) */}
+                {/* Mobile overlay */}
                 {sidebarOpen && (
                     <div
                         className="fixed inset-0 bg-black/40 z-30 md:hidden"
@@ -42,18 +47,22 @@ export default function AuthenticatedLayout({ children }) {
                     />
                 )}
 
-                {/* Content */}
+                {/* Main content + footer wrapper */}
                 <main
                     className={`
-        flex-1 p-4 sm:p-6 transition-all
-        ${collapsed ? "md:ml-20" : "md:ml-64"}
-    `}
+                        flex-1 flex flex-col ml-0 md:ml-${collapsed ? "20" : "64"}
+                        p-4 sm:p-6
+                    `}
                 >
-                    {children}
+                    {/* Content */}
+                    <div className="flex-1">
+                        {children}
+                    </div>
+
+                    {/* Footer */}
+                    <Footer />
                 </main>
             </div>
-
-            <Footer />
         </div>
     );
 }
