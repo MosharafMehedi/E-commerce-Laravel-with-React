@@ -51,7 +51,7 @@ export default function AuthenticatedLayout({ children }) {
                 <main
                     className={`
                         flex-1 flex flex-col ml-0 md:ml-${collapsed ? "20" : "64"}
-                        p-4 sm:p-7
+                        p-4 sm:p-6
                     `}
                 >
                     {/* Content */}
