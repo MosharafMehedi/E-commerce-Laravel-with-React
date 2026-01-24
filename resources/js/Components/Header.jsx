@@ -47,9 +47,19 @@ export default function Header({ onMenuClick }) {
                     <Dropdown.Trigger>
                         <button className="flex items-center gap-2 rounded-lg bg-white px-2 sm:px-4 py-2 transition-all duration-200">
                             
-                            {/* Avatar (always visible) */}
-                            <div className="flex h-9 w-9 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-indigo-500 text-white font-bold">
-                                {user.name.charAt(0).toUpperCase()}
+                            {/* Avatar */}
+                            <div className="h-9 w-9 sm:h-8 sm:w-8 rounded-full overflow-hidden border">
+                                {user.profile_photo_url ? (
+                                    <img
+                                        src={user.profile_photo_url}
+                                        alt={user.name}
+                                        className="h-full w-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="h-full w-full flex items-center justify-center bg-indigo-500 text-white font-bold">
+                                        {user.name.charAt(0).toUpperCase()}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Name (desktop only) */}
