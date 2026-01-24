@@ -49,9 +49,9 @@ export default function Header({ onMenuClick }) {
                             
                             {/* Avatar */}
                             <div className="h-9 w-9 sm:h-8 sm:w-8 rounded-full overflow-hidden border">
-                                {user.profile_photo_url ? (
+                                {user.profile_photo ? (
                                     <img
-                                        src={user.profile_photo_url}
+                                        src={`/storage/${user.profile_photo}`} // ✅ uploaded photo
                                         alt={user.name}
                                         className="h-full w-full object-cover"
                                     />
