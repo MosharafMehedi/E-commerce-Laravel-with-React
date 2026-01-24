@@ -1,133 +1,121 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { Package, Lock, MapPin, CreditCard, User, MessageSquare, Plus } from 'lucide-react';
 
-export default function Dashboard() {
+export default function AmazonDashboard({ auth }) {
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
-                    Dashboard
-                </h2>
-            }
-        >
-            <Head title="Dashboard" />
+        <AuthenticatedLayout>
+            <Head title="Your Account" />
 
-            <div className="py-4">
-                <div className="w-full px-6 sm:px-6 lg:px-8 space-y-6">
+            <div className="bg-white min-h-screen pb-20">
+                {/* Amazon Style Breadcrumb */}
+                <div className="max-w-5xl mx-auto px-4 py-4 text-sm">
+                    <span className="text-gray-600">Your Account</span>
+                </div>
 
-                    {/* Welcome Section */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                            <h3 className="text-xl font-bold text-gray-800">
-                                Welcome back 👋
-                            </h3>
-                            <p className="text-gray-600 mt-1">
-                                Here's what's happening in your store today.
-                            </p>
-                        </div>
-                        <button className="mt-4 sm:mt-0 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm">
-                            Add Product
-                        </button>
+                <div className="max-w-5xl mx-auto px-4">
+                    <h1 className="text-3xl font-medium text-gray-900 mb-6">Your Account</h1>
+
+                    {/* 1. Main Grid - Amazon's Signature Card Layout */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <AmazonAccountCard 
+                            icon={<Package className="w-12 h-12 text-blue-400" strokeWidth={1.5} />}
+                            title="Your Orders"
+                            desc="Track, return, or buy things again"
+                        />
+                        <AmazonAccountCard 
+                            icon={<Lock className="w-12 h-12 text-blue-400" strokeWidth={1.5} />}
+                            title="Login & security"
+                            desc="Edit login, name, and mobile number"
+                        />
+                        <AmazonAccountCard 
+                            icon={<MapPin className="w-12 h-12 text-blue-400" strokeWidth={1.5} />}
+                            title="Your Addresses"
+                            desc="Edit addresses for orders and gifts"
+                        />
+                        <AmazonAccountCard 
+                            icon={<CreditCard className="w-12 h-12 text-blue-400" strokeWidth={1.5} />}
+                            title="Your Payments"
+                            desc="View all transactions, manage payment methods and settings"
+                        />
+                        <AmazonAccountCard 
+                            icon={<User className="w-12 h-12 text-blue-400" strokeWidth={1.5} />}
+                            title="Your Profiles"
+                            desc="Manage, add, or remove user profiles for personalized experiences"
+                        />
+                        <AmazonAccountCard 
+                            icon={<MessageSquare className="w-12 h-12 text-blue-400" strokeWidth={1.5} />}
+                            title="Customer Service"
+                            desc="Browse help topics or contact us"
+                        />
                     </div>
 
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <StatCard title="Total Orders" value="1,245" trend="+12%" />
-                        <StatCard title="Total Products" value="320" trend="+5%" />
-                        <StatCard title="Customers" value="860" trend="+18%" />
-                        <StatCard title="Revenue" value="$12,480" trend="+9%" />
+                    <hr className="my-10 border-gray-200" />
+
+                    {/* 2. Amazon Style List Sections */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <AccountListSection title="Digital content and devices">
+                            <li>Apps and more</li>
+                            <li>Content and devices</li>
+                            <li>Digital gifts</li>
+                        </AccountListSection>
+
+                        <AccountListSection title="Email alerts, messages, and ads">
+                            <li>Advertising preferences</li>
+                            <li>Communication preferences</li>
+                            <li>Message Center</li>
+                        </AccountListSection>
+
+                        <AccountListSection title="More ways to pay">
+                            <li>Amazon Pay balance</li>
+                            <li>Your Currencies</li>
+                        </AccountListSection>
                     </div>
 
-                    {/* Main Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                        {/* Recent Orders */}
-                        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6">
-                            <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                                Recent Orders
-                            </h4>
-
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
-                                    <thead>
-                                        <tr className="text-left text-gray-500 border-b">
-                                            <th className="py-2">Order ID</th>
-                                            <th>Status</th>
-                                            <th>Customer</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <OrderRow id="#1023" status="Paid" customer="John Doe" total="$120" />
-                                        <OrderRow id="#1022" status="Pending" customer="Sarah Lee" total="$89" />
-                                        <OrderRow id="#1021" status="Shipped" customer="Mark Smith" total="$245" />
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        {/* Top Products */}
-                        <div className="bg-white rounded-2xl shadow-sm p-6">
-                            <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                                Top Products
-                            </h4>
-
-                            <ul className="space-y-4">
-                                <ProductItem name="iPhone 15 Pro" sales="120 sales" />
-                                <ProductItem name="AirPods Pro" sales="98 sales" />
-                                <ProductItem name="MacBook Air" sales="75 sales" />
-                            </ul>
+                    {/* 3. Personalized 'Buy It Again' (Amazon Style Grid) */}
+                    <div className="mt-12 border border-gray-200 rounded-lg p-6">
+                        <h3 className="text-xl font-bold mb-4">Buy it again</h3>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <div key={i} className="group cursor-pointer">
+                                    <div className="aspect-square bg-gray-50 rounded-md flex items-center justify-center mb-2 border border-transparent group-hover:border-gray-300">
+                                        <img src={`https://placehold.co/150x150?text=Product+${i}`} alt="product" className="mix-blend-multiply" />
+                                    </div>
+                                    <p className="text-sm text-blue-600 group-hover:text-orange-700 font-medium truncate">Product Name Example {i}</p>
+                                    <p className="text-xs text-red-700 font-bold mt-1">৳ 550.00</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
-
                 </div>
             </div>
         </AuthenticatedLayout>
     );
 }
 
-/* ================= Components ================= */
+/* ================= Amazon Specific Components ================= */
 
-function StatCard({ title, value, trend }) {
+function AmazonAccountCard({ icon, title, desc }) {
     return (
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-            <p className="text-sm text-gray-500">{title}</p>
-            <div className="mt-2 flex items-center justify-between">
-                <p className="text-2xl font-bold text-gray-800">{value}</p>
-                <span className="text-sm font-medium text-green-600">
-                    {trend}
-                </span>
+        <div className="flex items-start p-4 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer transition h-full">
+            <div className="mr-4 mt-1">
+                {icon}
+            </div>
+            <div>
+                <h2 className="text-lg font-medium text-gray-900 leading-tight">{title}</h2>
+                <p className="text-sm text-gray-600 mt-1 leading-snug">{desc}</p>
             </div>
         </div>
     );
 }
 
-function OrderRow({ id, status, customer, total }) {
-    const statusColor = {
-        Paid: 'bg-green-100 text-green-700',
-        Pending: 'bg-yellow-100 text-yellow-700',
-        Shipped: 'bg-blue-100 text-blue-700',
-    };
-
+function AccountListSection({ title, children }) {
     return (
-        <tr className="border-b last:border-none">
-            <td className="py-3 font-medium text-gray-800">{id}</td>
-            <td>
-                <span className={`px-2 py-1 rounded-full text-xs ${statusColor[status]}`}>
-                    {status}
-                </span>
-            </td>
-            <td>{customer}</td>
-            <td className="font-semibold">{total}</td>
-        </tr>
-    );
-}
-
-function ProductItem({ name, sales }) {
-    return (
-        <li className="flex items-center justify-between">
-            <span className="font-medium text-gray-700">{name}</span>
-            <span className="text-sm text-gray-500">{sales}</span>
-        </li>
+        <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-3">{title}</h3>
+            <ul className="text-sm space-y-2 text-blue-600 hover:text-orange-700 cursor-pointer">
+                {children}
+            </ul>
+        </div>
     );
 }
