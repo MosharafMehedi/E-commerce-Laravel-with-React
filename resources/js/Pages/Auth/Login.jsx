@@ -1,22 +1,47 @@
-import Checkbox from '@/Components/Checkbox';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import Checkbox from "@/Components/Checkbox";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
+import GuestLayout from "@/Layouts/GuestLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
+import Swal from "sweetalert2";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
+        email: "",
+        password: "",
         remember: false,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('login'), {
-            onFinish: () => reset('password'),
+
+        Swal.fire({
+            title: "Signing you in...",
+            text: "Please wait",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
+        post(route("login"), {
+            onSuccess: () => {
+                Swal.close();
+            },
+            onError: () => {
+                Swal.close();
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Login failed",
+                    text: "Invalid email or password",
+                });
+            },
+
+            onFinish: () => reset("password"),
         });
     };
 
@@ -25,16 +50,13 @@ export default function Login({ status, canResetPassword }) {
             <Head title="Login" />
 
             <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-
                 {/* LEFT IMAGE PANEL */}
                 <div
                     className="hidden lg:flex items-center justify-center bg-cover bg-center relative"
                     style={{ backgroundImage: "url('/images/login-bg.jpg')" }}
                 >
-                    {/* Overlay */}
                     <div className="absolute inset-0 bg-black/50" />
 
-                    {/* Text */}
                     <div className="relative z-10 max-w-lg px-10 text-white">
                         <h1 className="text-4xl font-bold leading-tight">
                             Manage Your Business Effortlessly
@@ -49,8 +71,6 @@ export default function Login({ status, canResetPassword }) {
                 {/* RIGHT FORM PANEL */}
                 <div className="flex items-center justify-center px-6 sm:px-10">
                     <div className="w-full max-w-md">
-
-                        {/* Header */}
                         <h2 className="text-3xl font-bold text-gray-900">
                             Welcome Back
                         </h2>
@@ -64,13 +84,15 @@ export default function Login({ status, canResetPassword }) {
                             </div>
                         )}
 
-                        {/* FORM */}
                         <form onSubmit={submit} className="mt-8 space-y-6">
-
                             {/* Email */}
                             <div>
-                                <InputLabel htmlFor="email" value="Email address" />
+                                <InputLabel
+                                    htmlFor="email"
+                                    value="Email address"
+                                />
                                 <TextInput
+                                    required
                                     id="email"
                                     type="email"
                                     name="email"
@@ -79,19 +101,19 @@ export default function Login({ status, canResetPassword }) {
                                     autoComplete="username"
                                     isFocused
                                     onChange={(e) =>
-                                        setData('email', e.target.value)
+                                        setData("email", e.target.value)
                                     }
-                                />
-                                <InputError
-                                    message={errors.email}
-                                    className="mt-2"
                                 />
                             </div>
 
                             {/* Password */}
                             <div>
-                                <InputLabel htmlFor="password" value="Password" />
+                                <InputLabel
+                                    htmlFor="password"
+                                    value="Password"
+                                />
                                 <TextInput
+                                    required
                                     id="password"
                                     type="password"
                                     name="password"
@@ -99,12 +121,8 @@ export default function Login({ status, canResetPassword }) {
                                     className="mt-1 block w-full rounded-lg"
                                     autoComplete="current-password"
                                     onChange={(e) =>
-                                        setData('password', e.target.value)
+                                        setData("password", e.target.value)
                                     }
-                                />
-                                <InputError
-                                    message={errors.password}
-                                    className="mt-2"
                                 />
                             </div>
 
@@ -115,7 +133,10 @@ export default function Login({ status, canResetPassword }) {
                                         name="remember"
                                         checked={data.remember}
                                         onChange={(e) =>
-                                            setData('remember', e.target.checked)
+                                            setData(
+                                                "remember",
+                                                e.target.checked,
+                                            )
                                         }
                                     />
                                     <span className="ms-2 text-sm text-gray-600">
@@ -125,7 +146,7 @@ export default function Login({ status, canResetPassword }) {
 
                                 {canResetPassword && (
                                     <Link
-                                        href={route('password.request')}
+                                        href={route("password.request")}
                                         className="text-sm font-medium text-indigo-600 hover:underline"
                                     >
                                         Forgot password?
@@ -138,15 +159,14 @@ export default function Login({ status, canResetPassword }) {
                                 className="w-full justify-center rounded-lg bg-indigo-600 py-3 text-base font-medium hover:bg-indigo-700"
                                 disabled={processing}
                             >
-                                Sign In
+                                {processing ? "Signing in..." : "Sign In"}
                             </PrimaryButton>
                         </form>
 
-                        {/* Footer */}
                         <p className="mt-8 text-center text-sm text-gray-600">
-                            Don’t have an account?{' '}
+                            Don’t have an account?{" "}
                             <Link
-                                href={route('register')}
+                                href={route("register")}
                                 className="font-medium text-indigo-600 hover:underline"
                             >
                                 Create an account

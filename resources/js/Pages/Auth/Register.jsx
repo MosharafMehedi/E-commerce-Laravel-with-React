@@ -1,23 +1,52 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
+import GuestLayout from "@/Layouts/GuestLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
+import Swal from "sweetalert2";
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
+        Swal.fire({
+            title: "Signing you in...",
+            text: "Please wait",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
 
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
+        post(route("register"), {
+            onSuccess: () => {
+                Swal.close();
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: "Registration successful",
+                    timer: 1500,
+                    showConfirmButton: true,
+                });
+            },
+            onError: () => {
+                Swal.close();
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Registration failed",
+                    text: "Password not Matched",
+                });
+            },
+            onFinish: () => reset("password", "password_confirmation"),
         });
     };
 
@@ -26,7 +55,6 @@ export default function Register() {
             <Head title="Register" />
 
             <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-
                 {/* LEFT IMAGE PANEL */}
                 <div
                     className="hidden lg:flex items-center justify-center bg-cover bg-center relative"
@@ -50,7 +78,6 @@ export default function Register() {
                 {/* RIGHT FORM PANEL */}
                 <div className="flex items-center justify-center px-6 sm:px-10">
                     <div className="w-full max-w-md">
-
                         {/* Header */}
                         <h2 className="text-3xl font-bold text-gray-900">
                             Sign Up
@@ -61,7 +88,6 @@ export default function Register() {
 
                         {/* FORM */}
                         <form onSubmit={submit} className="mt-8 space-y-6">
-
                             {/* Name */}
                             <div>
                                 <InputLabel htmlFor="name" value="Full name" />
@@ -73,7 +99,7 @@ export default function Register() {
                                     autoComplete="name"
                                     isFocused
                                     onChange={(e) =>
-                                        setData('name', e.target.value)
+                                        setData("name", e.target.value)
                                     }
                                     required
                                 />
@@ -85,7 +111,10 @@ export default function Register() {
 
                             {/* Email */}
                             <div>
-                                <InputLabel htmlFor="email" value="Email address" />
+                                <InputLabel
+                                    htmlFor="email"
+                                    value="Email address"
+                                />
                                 <TextInput
                                     id="email"
                                     type="email"
@@ -94,7 +123,7 @@ export default function Register() {
                                     className="mt-1 block w-full rounded-lg"
                                     autoComplete="username"
                                     onChange={(e) =>
-                                        setData('email', e.target.value)
+                                        setData("email", e.target.value)
                                     }
                                     required
                                 />
@@ -106,16 +135,20 @@ export default function Register() {
 
                             {/* Password */}
                             <div>
-                                <InputLabel htmlFor="password" value="Password" />
+                                <InputLabel
+                                    htmlFor="password"
+                                    value="Password"
+                                />
                                 <TextInput
                                     id="password"
                                     type="password"
                                     name="password"
+                                    minlength="8"
                                     value={data.password}
                                     className="mt-1 block w-full rounded-lg"
                                     autoComplete="new-password"
                                     onChange={(e) =>
-                                        setData('password', e.target.value)
+                                        setData("password", e.target.value)
                                     }
                                     required
                                 />
@@ -140,8 +173,8 @@ export default function Register() {
                                     autoComplete="new-password"
                                     onChange={(e) =>
                                         setData(
-                                            'password_confirmation',
-                                            e.target.value
+                                            "password_confirmation",
+                                            e.target.value,
                                         )
                                     }
                                     required
@@ -163,9 +196,9 @@ export default function Register() {
 
                         {/* Footer */}
                         <p className="mt-8 text-center text-sm text-gray-600">
-                            Already have an account?{' '}
+                            Already have an account?{" "}
                             <Link
-                                href={route('login')}
+                                href={route("login")}
                                 className="font-medium text-indigo-600 hover:underline"
                             >
                                 Sign in
