@@ -43,7 +43,7 @@ export default function Register() {
                 Swal.fire({
                     icon: "error",
                     title: "Registration failed",
-                    text: "Password not Matched",
+                    text: "Password not Matched !",
                 });
             },
             onFinish: () => reset("password", "password_confirmation"),
