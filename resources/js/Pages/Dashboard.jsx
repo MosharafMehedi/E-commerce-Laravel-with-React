@@ -217,27 +217,60 @@ function CategoryTab({ active, label, icon, onClick }) {
 
 function ProductCard({ name, price, rating, img, tag, color }) {
     return (
-        <div className="bg-white p-8 rounded-[3.5rem] border border-gray-100 hover:shadow-[0_50px_100px_-20px_rgba(0,0,0,0.12)] transition-all duration-700 cursor-pointer group relative overflow-hidden">
-            <div className={`${color} rounded-[2.5rem] h-72 flex items-center justify-center mb-10 overflow-hidden relative shadow-inner group-hover:bg-white transition-colors duration-700`}>
+        <div className="group relative bg-white/60 backdrop-blur-md rounded-[2.5rem] p-3 transition-all duration-500 hover:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.1)] border border-gray-100/50 flex flex-col h-full cursor-pointer hover:-translate-y-2">
+            
+            {/* Image Container with Soft Glow */}
+            <div className={`relative ${color} rounded-[2.2rem] aspect-[4/5] flex items-center justify-center overflow-hidden transition-all duration-700`}>
+                
+                {/* Minimalist Floating Tag */}
+                <div className="absolute top-5 left-5 z-10">
+                    <span className="bg-black text-white text-[8px] font-black px-3 py-1.5 rounded-lg uppercase tracking-[2px]">
+                        {tag}
+                    </span>
+                </div>
+
+                {/* Main Image with Smooth Hover Scale */}
                 <img 
-                    src={`https://placehold.co/400x400/ffffff/000000?text=${img}`} 
-                    className="w-52 h-52 object-contain group-hover:scale-125 group-hover:-rotate-12 transition duration-700 mix-blend-multiply drop-shadow-lg" 
+                    src={`https://placehold.co/400x500/ffffff/000000?text=${img}`} 
+                    className="w-44 h-44 object-contain mix-blend-multiply transition-all duration-700 group-hover:scale-110 group-hover:rotate-3" 
+                    alt={name}
                 />
-            </div>
-            <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                    <span className="text-orange-600 font-black text-[11px] uppercase tracking-[4px]">{tag}</span>
-                    <div className="flex text-orange-400 text-[10px]">{"★".repeat(rating)}</div>
+
+                {/* Minimal Overlay Button */}
+                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <div className="bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <Plus className="w-6 h-6 text-black" />
+                    </div>
                 </div>
-                <h4 className="font-black text-gray-900 text-3xl tracking-tighter truncate">{name}</h4>
             </div>
-            <div className="flex justify-between items-center mt-12">
-                <div className="flex flex-col">
-                    <span className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-1">Starting From</span>
-                    <span className="text-4xl font-black text-gray-900 tracking-tighter">৳{price}</span>
+
+            {/* Product Info Section */}
+            <div className="mt-5 px-3 pb-4">
+                <div className="flex justify-between items-center mb-1">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Premium Series</span>
+                    <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-orange-500 fill-orange-500" />
+                        <span className="text-xs font-black text-gray-900">{rating}.0</span>
+                    </div>
                 </div>
-                <div className="bg-gray-100 text-black p-6 rounded-[2rem] group-hover:bg-orange-600 group-hover:text-white group-hover:rotate-[360deg] transition-all duration-700 shadow-sm">
-                    <Plus className="w-7 h-7" />
+
+                <h4 className="font-black text-gray-900 text-2xl tracking-tighter mb-4 leading-tight">
+                    {name}
+                </h4>
+
+                {/* Simple & Bold Price Row */}
+                <div className="flex justify-between items-end">
+                    <div className="flex flex-col">
+                        <span className="text-[9px] text-gray-400 font-black uppercase tracking-tighter">M-Shop Price</span>
+                        <div className="flex items-center gap-1">
+                            <span className="text-3xl font-black text-gray-900 tracking-tighter">৳{price}</span>
+                        </div>
+                    </div>
+                    
+                    {/* Unique Minimalist Arrow Button */}
+                    <div className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center group-hover:bg-black group-hover:border-black transition-all duration-300">
+                        <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
+                    </div>
                 </div>
             </div>
         </div>
