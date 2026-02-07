@@ -1,127 +1,149 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, router } from '@inertiajs/react';
-import { Plus, Trash2, Edit2, X, ImageIcon, UploadCloud } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Star, Zap, Package, ImageIcon } from 'lucide-react';
 
 export default function Index({ auth, products, categories }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editData, setEditData] = useState(null);
 
     const { data, setData, post, reset, processing, errors } = useForm({
-        name: '',
-        category_id: '',
-        price: '',
-        description: '',
-        image: null,
+        name: '', category_id: '', price: '', quantity: 0, desc: '', tag: '', rating: 5, img: null
     });
 
     const submit = (e) => {
         e.preventDefault();
-        
+        const options = { onSuccess: () => { setIsModalOpen(false); reset(); setEditData(null); }};
         if (editData) {
-            // Laravel-e file update korar jonno POST use kore _method PUT pathate hoy
-            router.post(route('products.update', editData.id), {
-                ...data,
-                _method: 'PUT',
-            }, {
-                onSuccess: () => closeModal(),
-            });
+            router.post(route('products.update', editData.id), { ...data, _method: 'PUT' }, options);
         } else {
-            post(route('products.store'), {
-                onSuccess: () => closeModal(),
-            });
+            post(route('products.store'), options);
         }
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setEditData(null);
-        reset();
-    };
-
-    const openEditModal = (product) => {
+    const openEdit = (product) => {
         setEditData(product);
         setData({
             name: product.name,
             category_id: product.category_id,
             price: product.price,
-            description: product.description,
-            image: null, 
+            quantity: product.quantity,
+            desc: product.desc,
+            tag: product.tag,
+            rating: product.rating,
+            img: null
         });
         setIsModalOpen(true);
     };
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Product Management" />
+            <Head title="Products" />
             <div className="p-8 max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-2xl font-bold text-gray-800 uppercase tracking-tight">Inventory</h1>
-                    <button 
-                        onClick={() => { reset(); setIsModalOpen(true); }}
-                        className="bg-blue-600 text-white px-5 py-2.5 rounded-lg flex items-center gap-2 text-sm font-semibold hover:bg-blue-700 transition-all"
-                    >
-                        <Plus size={18} /> Add Product
+                
+                {/* Header */}
+                <div className="flex justify-between items-center mb-10">
+                    <h1 className="text-3xl font-black italic uppercase tracking-tighter">Inventory</h1>
+                    <button onClick={() => { reset(); setEditData(null); setIsModalOpen(true); }} className="bg-black text-white px-6 py-3 rounded-xl flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest shadow-xl">
+                        <Plus size={16} /> Add Product
                     </button>
                 </div>
 
-                {/* Product List */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Product Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {products.map(product => (
-                        <div key={product.id} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all group">
-                            <div className="relative h-48 w-full bg-gray-50 rounded-xl mb-4 overflow-hidden">
-                                {product.image ? (
-                                    <img src={`/storage/${product.image}`} className="w-full h-full object-cover" />
+                        <div key={product.id} className="bg-white rounded-[2.5rem] border border-slate-50 p-6 transition-all hover:shadow-2xl group relative">
+                            {/* Stock Badge */}
+                            <div className={`absolute top-6 right-6 z-10 text-[9px] font-black px-3 py-1 rounded-full uppercase flex items-center gap-1 ${product.quantity > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                                <Package size={10}/> {product.quantity > 0 ? `${product.quantity} In Stock` : 'Out of Stock'}
+                            </div>
+
+                            {/* Tag */}
+                            {product.tag && (
+                                <div className="absolute top-6 left-6 z-10 bg-orange-500 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase flex items-center gap-1">
+                                    <Zap size={10} fill="currentColor"/> {product.tag}
+                                </div>
+                            )}
+
+                            {/* Image Area */}
+                            <div className="w-full h-56 bg-slate-50 rounded-[2rem] mb-6 overflow-hidden flex items-center justify-center relative">
+                                {product.img ? (
+                                    <img src={`/storage/${product.img}`} className="w-full h-full object-contain p-6 mix-blend-multiply" />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-300"><ImageIcon size={40}/></div>
+                                    <ImageIcon className="text-slate-200" size={48} />
                                 )}
-                                <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={() => openEditModal(product)} className="bg-white p-2 rounded-full shadow-sm text-gray-600 hover:text-blue-600"><Edit2 size={14}/></button>
-                                    <button onClick={() => router.delete(route('products.destroy', product.id))} className="bg-white p-2 rounded-full shadow-sm text-gray-600 hover:text-red-600"><Trash2 size={14}/></button>
+                                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                                    <button onClick={() => openEdit(product)} className="bg-white p-4 rounded-2xl shadow-lg hover:scale-110 transition-transform"><Edit2 size={18}/></button>
+                                    <button onClick={() => router.delete(route('products.destroy', product.id))} className="bg-white p-4 rounded-2xl shadow-lg text-red-500 hover:scale-110 transition-transform"><Trash2 size={18}/></button>
                                 </div>
                             </div>
-                            <span className="text-[10px] font-bold text-blue-500 uppercase">{product.category?.name}</span>
-                            <h3 className="font-bold text-gray-800 truncate">{product.name}</h3>
-                            <p className="text-lg font-bold mt-1 text-gray-900">৳{product.price}</p>
+
+                            {/* Details */}
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest">{product.category?.name}</span>
+                                    <div className="flex text-orange-400">
+                                        {[...Array(5)].map((_, i) => <Star key={i} size={10} fill={i < (product.rating || 5) ? "currentColor" : "none"} className={i < (product.rating || 5) ? "" : "text-slate-200"} />)}
+                                    </div>
+                                </div>
+                                <h3 className="text-xl font-black text-slate-900 tracking-tighter italic uppercase truncate">{product.name}</h3>
+                                <p className="text-slate-400 text-xs line-clamp-2 italic">{product.desc || "No description provided."}</p>
+                                <div className="pt-4 border-t border-slate-50 flex justify-between items-center">
+                                    <span className="text-2xl font-black text-slate-900">৳{product.price}</span>
+                                    <span className="text-[10px] font-bold text-slate-300 uppercase italic">ID: #{product.id}</span>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
 
-                {/* --- MODAL --- */}
+                {/* MODAL */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                        <div className="bg-white rounded-2xl p-8 w-full max-w-lg shadow-xl">
-                            <div className="flex justify-between mb-6">
-                                <h2 className="text-xl font-bold">{editData ? 'Edit Product' : 'Add New Product'}</h2>
-                                <button onClick={closeModal}><X size={20}/></button>
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/10 backdrop-blur-sm">
+                        <div className="bg-white rounded-[3rem] p-10 w-full max-w-xl shadow-2xl animate-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
+                            <div className="flex justify-between items-center mb-8">
+                                <h2 className="text-2xl font-black italic uppercase tracking-tighter">{editData ? 'Edit Product' : 'New Product'}</h2>
+                                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-50 rounded-full"><X/></button>
                             </div>
-
-                            <form onSubmit={submit} className="space-y-4">
-                                <input type="text" placeholder="Product Name" value={data.name} className="w-full border-gray-200 rounded-lg p-3 text-sm focus:ring-blue-500" onChange={e => setData('name', e.target.value)} />
-                                
-                                <select value={data.category_id} className="w-full border-gray-200 rounded-lg p-3 text-sm focus:ring-blue-500" onChange={e => setData('category_id', e.target.value)}>
-                                    <option value="">Select Category</option>
-                                    {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
-                                </select>
-
-                                <input type="number" placeholder="Price (৳)" value={data.price} className="w-full border-gray-200 rounded-lg p-3 text-sm focus:ring-blue-500" onChange={e => setData('price', e.target.value)} />
-
-                                {/* IMAGE INPUT */}
-                                <div className="border-2 border-dashed border-gray-100 rounded-lg p-4 text-center">
-                                    <label className="cursor-pointer">
-                                        <UploadCloud className="mx-auto text-gray-400 mb-2" size={24} />
-                                        <span className="text-xs text-gray-500">{data.image ? data.image.name : 'Click to upload image'}</span>
-                                        <input type="file" className="hidden" onChange={e => setData('image', e.target.files[0])} />
-                                    </label>
+                            
+                            <form onSubmit={submit} className="grid grid-cols-2 gap-4">
+                                <div className="col-span-2">
+                                    <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Product Name</label>
+                                    <input type="text" value={data.name} className="w-full bg-slate-50 border-none rounded-xl p-4 text-sm" required onChange={e => setData('name', e.target.value)} />
                                 </div>
-
-                                <textarea placeholder="Description" value={data.description} className="w-full border-gray-200 rounded-lg p-3 text-sm h-24 focus:ring-blue-500" onChange={e => setData('description', e.target.value)} />
-
-                                <button 
-                                    disabled={processing}
-                                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-sm hover:bg-blue-700 disabled:bg-gray-400 transition-all"
-                                >
-                                    {processing ? 'Saving...' : 'Save Product'}
+                                <div>
+                                    <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Category</label>
+                                    <select value={data.category_id} className="w-full bg-slate-50 border-none rounded-xl p-4 text-sm" onChange={e => setData('category_id', e.target.value)}>
+                                        <option value="">Select</option>
+                                        {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Price</label>
+                                    <input type="text" value={data.price} className="w-full bg-slate-50 border-none rounded-xl p-4 text-sm" onChange={e => setData('price', e.target.value)} />
+                                </div>
+                                <div>
+                                    <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Quantity</label>
+                                    <input type="number" value={data.quantity} className="w-full bg-slate-50 border-none rounded-xl p-4 text-sm" onChange={e => setData('quantity', e.target.value)} />
+                                </div>
+                                <div>
+                                    <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Rating (1-5)</label>
+                                    <input type="number" max="5" value={data.rating} className="w-full bg-slate-50 border-none rounded-xl p-4 text-sm" onChange={e => setData('rating', e.target.value)} />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Tag (e.g. Hot, New)</label>
+                                    <input type="text" value={data.tag} className="w-full bg-slate-50 border-none rounded-xl p-4 text-sm" onChange={e => setData('tag', e.target.value)} />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Image</label>
+                                    <input type="file" className="w-full bg-slate-50 border-none rounded-xl p-4 text-xs" onChange={e => setData('img', e.target.files[0])} />
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="text-[9px] font-black uppercase text-slate-400 ml-2">Description</label>
+                                    <textarea value={data.desc} className="w-full bg-slate-50 border-none rounded-xl p-4 h-24 text-sm" onChange={e => setData('desc', e.target.value)} />
+                                </div>
+                                <button className="col-span-2 bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-600 transition-all shadow-xl">
+                                    {processing ? 'Processing...' : 'Confirm Inventory'}
                                 </button>
                             </form>
                         </div>

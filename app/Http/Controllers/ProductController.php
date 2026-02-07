@@ -19,15 +19,18 @@ class ProductController extends Controller
 
     public function store(Request $request) {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric',
-            'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'name' => 'required|string',
+            'category_id' => 'required',
+            'price' => 'required',
+            'quantity' => 'nullable|integer',
+            'rating' => 'nullable|integer|max:5',
+            'tag' => 'nullable|string',
+            'desc' => 'nullable|string',
+            'img' => 'nullable|image|max:2048',
         ]);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
+        if ($request->hasFile('img')) {
+            $validated['img'] = $request->file('img')->store('products', 'public');
         }
 
         Product::create($validated);
@@ -36,19 +39,19 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product) {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric',
-            'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'name' => 'required',
+            'category_id' => 'required',
+            'price' => 'required',
+            'quantity' => 'nullable|integer',
+            'rating' => 'nullable|integer',
+            'tag' => 'nullable',
+            'desc' => 'nullable',
+            'img' => 'nullable|image|max:2048',
         ]);
 
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-            $validated['image'] = $request->file('image')->store('products', 'public');
+        if ($request->hasFile('img')) {
+            if ($product->img) Storage::disk('public')->delete($product->img);
+            $validated['img'] = $request->file('img')->store('products', 'public');
         }
 
         $product->update($validated);
@@ -56,9 +59,7 @@ class ProductController extends Controller
     }
 
     public function destroy(Product $product) {
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
+        if ($product->img) Storage::disk('public')->delete($product->img);
         $product->delete();
         return back();
     }
