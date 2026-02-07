@@ -1,5 +1,5 @@
 import NavLink from '@/Components/NavLink';
-import { FaHome, FaUser, FaCog, FaBars, FaTimes } from 'react-icons/fa';
+import { FaHome, FaUser, FaCog, FaBars, FaTimes, FaLayerGroup, FaBoxes } from 'react-icons/fa';
 
 export default function Sidebar({ collapsed, setCollapsed, onNavigate }) {
     return (
@@ -31,6 +31,26 @@ export default function Sidebar({ collapsed, setCollapsed, onNavigate }) {
                     active={route().current('dashboard')}
                     icon={<FaHome />}
                     label="Dashboard"
+                    collapsed={collapsed}
+                    onNavigate={onNavigate}
+                />
+
+                {/* Category Management */}
+                <NavItem
+                    href={route('categories.index')}
+                    active={route().current('categories.index')}
+                    icon={<FaLayerGroup />}
+                    label="Categories"
+                    collapsed={collapsed}
+                    onNavigate={onNavigate}
+                />
+
+                {/* Product Management */}
+                <NavItem
+                    href={route('products.index')}
+                    active={route().current('products.index')}
+                    icon={<FaBoxes />}
+                    label="Products"
                     collapsed={collapsed}
                     onNavigate={onNavigate}
                 />

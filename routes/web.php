@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Inertia\Inertia;
 
 // Welcome Page
@@ -27,6 +29,24 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('admin/categories', CategoryController::class)->names([
+        'index' => 'categories.index',
+        'store' => 'categories.store',
+        'update' => 'categories.update',
+        'destroy' => 'categories.destroy',
+    ]);
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('admin/products', ProductController::class)->names([
+        'index' => 'products.index',
+        'store' => 'products.store',
+        'update' => 'products.update',
+        'destroy' => 'products.destroy',
+    ]);
 });
 
 // Auth routes (login, register, password, etc.)
