@@ -50,9 +50,17 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('img')) {
-            if ($product->img) Storage::disk('public')->delete($product->img);
-            $validated['img'] = $request->file('img')->store('products', 'public');
+        // Purono image thakle delete kora (Optional but recommended)
+        if ($product->img && Storage::disk('public')->exists($product->img)) {
+            Storage::disk('public')->delete($product->img);
         }
+        
+        // Notun image store kora
+        $validated['img'] = $request->file('img')->store('products', 'public');
+    } else {
+        // Request theke image field remove kora jate ager path overwrite na hoy
+        unset($validated['img']);
+    }
 
         $product->update($validated);
         return back();
