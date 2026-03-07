@@ -6,13 +6,18 @@ import {
   Dumbbell, LayoutGrid, X, Search, RotateCcw, Heart, ShoppingBag
 } from 'lucide-react';
 
-export default function Dashboard({ auth, allProducts, filters }) {
+export default function Dashboard({ auth, allProducts, filters, categories }) {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [activeCategory, setActiveCategory] = useState("All");
     const searchQuery = filters.search || "";
 
+    // Dynamic Category Filtering Logic
     const filteredProducts = useMemo(() => {
-        return allProducts.filter(p => activeCategory === "All" || p.category === activeCategory);
+        return allProducts.filter(p => {
+            // Database-er data-te category object thake, tai p.category.name check korchi
+            const productCat = p.category?.name || "Uncategorized";
+            return activeCategory === "All" || productCat === activeCategory;
+        });
     }, [activeCategory, allProducts]);
 
     return (
@@ -22,7 +27,7 @@ export default function Dashboard({ auth, allProducts, filters }) {
             <div className="bg-[#f8f9fa] min-h-screen pb-20 px-4 md:px-8">
                 <div className="max-w-7xl mx-auto pt-6">
                     
-                    {/* --- MODERN HERO: Minimalist & Deep --- */}
+                    {/* --- MODERN HERO --- */}
                     {!searchQuery && (
                         <div className="relative group rounded-[2.5rem] h-[350px] md:h-[480px] overflow-hidden bg-neutral-900 mb-12 shadow-2xl">
                             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent z-10" />
@@ -48,21 +53,29 @@ export default function Dashboard({ auth, allProducts, filters }) {
                         </div>
                     )}
 
-                    {/* --- CATEGORY SELECTOR: Floating Pill Design --- */}
+                    {/* --- CATEGORY SELECTOR: Now Dynamic --- */}
                     {!searchQuery && (
                         <div className="flex justify-center mb-16">
                             <div className="flex items-center gap-2 bg-white/50 backdrop-blur-md p-2 rounded-full border border-neutral-200 shadow-sm overflow-x-auto no-scrollbar max-w-full">
-                                {["All", "Gadgets", "Laptops", "Fashion", "Kitchen", "Fitness","Test",].map((cat) => (
+                                <button
+                                    onClick={() => setActiveCategory("All")}
+                                    className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all duration-300 ${
+                                        activeCategory === "All" ? "bg-neutral-900 text-white shadow-lg" : "text-neutral-500 hover:bg-neutral-100"
+                                    }`}
+                                >
+                                    All
+                                </button>
+                                {categories && categories.map((cat) => (
                                     <button
-                                        key={cat}
-                                        onClick={() => setActiveCategory(cat)}
+                                        key={cat.id}
+                                        onClick={() => setActiveCategory(cat.name)}
                                         className={`px-6 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all duration-300 ${
-                                            activeCategory === cat 
+                                            activeCategory === cat.name 
                                             ? "bg-neutral-900 text-white shadow-lg" 
                                             : "text-neutral-500 hover:bg-neutral-100"
                                         }`}
                                     >
-                                        {cat}
+                                        {cat.name}
                                     </button>
                                 ))}
                             </div>
@@ -80,7 +93,7 @@ export default function Dashboard({ auth, allProducts, filters }) {
                         </div>
                     </div>
 
-                    {/* --- PRODUCT GRID: Clean Card Aesthetic --- */}
+                    {/* --- PRODUCT GRID --- */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
                         {filteredProducts.map((product) => (
                             <div 
@@ -88,12 +101,14 @@ export default function Dashboard({ auth, allProducts, filters }) {
                                 onClick={() => setSelectedProduct(product)}
                                 className="group cursor-pointer"
                             >
-                                <div className={`relative aspect-[1/1] rounded-[2rem] ${product.color} overflow-hidden mb-6 transition-all duration-500 group-hover:shadow-2xl`}>
+                                <div className={`relative aspect-[1/1] rounded-[2rem] ${product.color || 'bg-slate-100'} overflow-hidden mb-6 transition-all duration-500 group-hover:shadow-2xl`}>
+                                    {/* Real Image from Storage or Placeholder */}
                                     <img 
-                                        src={`https://placehold.co/400x400/transparent/333?text=${product.img}`} 
+                                        src={product.img ? `/storage/${product.img}` : `https://placehold.co/400x400/transparent/333?text=${product.name}`} 
                                         className="w-full h-full object-contain p-12 transition-transform duration-700 group-hover:scale-110" 
                                         alt={product.name} 
                                     />
+                                    
                                     <div className="absolute top-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <div className="bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg">
                                             <Heart className="w-4 h-4 text-neutral-900" />
@@ -110,7 +125,7 @@ export default function Dashboard({ auth, allProducts, filters }) {
                                         <span className="text-[10px] font-bold text-orange-500 uppercase tracking-widest">{product.tag}</span>
                                         <div className="flex items-center gap-1">
                                             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                            <span className="text-[10px] font-bold text-neutral-400">{product.rating}.0</span>
+                                            <span className="text-[10px] font-bold text-neutral-400">{product.rating || 5}.0</span>
                                         </div>
                                     </div>
                                     <h3 className="text-lg font-medium text-neutral-900 tracking-tight leading-snug">{product.name}</h3>
@@ -121,21 +136,28 @@ export default function Dashboard({ auth, allProducts, filters }) {
                     </div>
                 </div>
 
-                {/* --- MODERN MODAL: Glassmorphism --- */}
+                {/* --- MODERN MODAL --- */}
                 {selectedProduct && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-neutral-900/40 backdrop-blur-md transition-opacity" onClick={() => setSelectedProduct(null)} />
                         <div className="relative bg-white rounded-[3rem] max-w-5xl w-full grid md:grid-cols-2 gap-0 overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] animate-in zoom-in duration-300">
-                            <div className={`${selectedProduct.color} p-12 flex items-center justify-center`}>
-                                <img src={`https://placehold.co/600x600?text=${selectedProduct.img}`} className="w-full object-contain mix-blend-multiply" />
+                            <div className={`${selectedProduct.color || 'bg-slate-100'} p-12 flex items-center justify-center`}>
+                                <img 
+                                    src={selectedProduct.img ? `/storage/${selectedProduct.img}` : `https://placehold.co/600x600?text=${selectedProduct.name}`} 
+                                    className="w-full object-contain mix-blend-multiply" 
+                                />
                             </div>
                             <div className="p-10 md:p-16 flex flex-col justify-center relative">
                                 <button onClick={() => setSelectedProduct(null)} className="absolute top-8 right-8 text-neutral-400 hover:text-black transition-colors">
                                     <X className="w-6 h-6" />
                                 </button>
-                                <span className="text-orange-500 text-xs font-black uppercase tracking-[0.3em] mb-4">{selectedProduct.category}</span>
+                                <span className="text-orange-500 text-xs font-black uppercase tracking-[0.3em] mb-4">
+                                    {selectedProduct.category?.name || "Premium"}
+                                </span>
                                 <h2 className="text-4xl md:text-5xl font-medium tracking-tight text-neutral-900 mb-6">{selectedProduct.name}</h2>
-                                <p className="text-neutral-500 text-sm md:text-base leading-relaxed mb-8 font-light italic">"{selectedProduct.desc}"</p>
+                                <p className="text-neutral-500 text-sm md:text-base leading-relaxed mb-8 font-light italic">
+                                    {selectedProduct.desc || "Exquisite design meets unparalleled performance."}
+                                </p>
                                 <div className="mb-10">
                                     <span className="text-neutral-400 text-[10px] font-bold uppercase tracking-widest block mb-1">Price</span>
                                     <span className="text-5xl font-bold tracking-tighter">৳{selectedProduct.price}</span>
