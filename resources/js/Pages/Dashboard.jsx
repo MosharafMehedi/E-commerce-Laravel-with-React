@@ -166,7 +166,7 @@ export default function Dashboard({ auth, allProducts, filters, categories }) {
                 </div>
 
                 {/* --- MODERN MODAL --- */}
-                {selectedProduct &&  (
+                {selectedProduct && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-neutral-900/40 backdrop-blur-md transition-opacity" onClick={() => setSelectedProduct(null)} />
                         <div className="relative bg-white rounded-[3rem] max-w-5xl w-full grid md:grid-cols-2 gap-0 overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] animate-in zoom-in duration-300">
