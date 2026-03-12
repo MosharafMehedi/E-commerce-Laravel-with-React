@@ -25,7 +25,7 @@ export default function Dashboard({ auth, allProducts, filters, categories }) {
             <Head title="MShopping | Premium Store" />
 
             <div className="bg-[#f8f9fa] min-h-screen pb-20 px-4 md:px-8">
-                <div className="max-w-7xl mx-auto pt-6">
+                <div className="mx-auto pt-6">
                     
                     {/* --- MODERN HERO --- */}
                     {!searchQuery && (
@@ -146,7 +146,7 @@ export default function Dashboard({ auth, allProducts, filters, categories }) {
                     {product.name}
                 </h3>
 
-                <div className="flex items-end justify-center pt-1">
+                <div className="flex items-end justify-between pt-1">
                     <p className="text-2xl font-black text-neutral-900 leading-none">
                         <span className="text-xs font-normal mr-0.5">৳</span>
                         {product.price.toLocaleString()}
