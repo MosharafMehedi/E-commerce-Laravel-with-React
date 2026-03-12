@@ -146,7 +146,7 @@ export default function Dashboard({ auth, allProducts, filters, categories }) {
                     {product.name}
                 </h3>
 
-                <div className="flex items-end justify-between pt-1">
+                <div className="flex items-end justify-center pt-1">
                     <p className="text-2xl font-black text-neutral-900 leading-none">
                         <span className="text-xs font-normal mr-0.5">৳</span>
                         {product.price.toLocaleString()}
