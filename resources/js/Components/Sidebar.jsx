@@ -1,5 +1,8 @@
 import NavLink from '@/Components/NavLink';
-import { FaHome, FaUser, FaCog, FaBars, FaTimes, FaLayerGroup, FaBoxes } from 'react-icons/fa';
+import { 
+    FaHome, FaUser, FaCog, FaBars, FaTimes, 
+    FaLayerGroup, FaBoxes, FaImages 
+} from 'react-icons/fa';
 
 export default function Sidebar({ collapsed, setCollapsed, onNavigate }) {
     return (
@@ -31,6 +34,16 @@ export default function Sidebar({ collapsed, setCollapsed, onNavigate }) {
                     active={route().current('dashboard')}
                     icon={<FaHome />}
                     label="Dashboard"
+                    collapsed={collapsed}
+                    onNavigate={onNavigate}
+                />
+
+                {/* --- Banner Management (New) --- */}
+                <NavItem
+                    href={route('banners.index')}
+                    active={route().current('banners.index')}
+                    icon={<FaImages />}
+                    label="Manage Banners"
                     collapsed={collapsed}
                     onNavigate={onNavigate}
                 />
@@ -85,7 +98,7 @@ function NavItem({ href, icon, label, collapsed, active, onNavigate }) {
             className={`
                 flex items-center gap-3 px-3 py-3 rounded-lg
                 transition hover:bg-gray-100
-                ${active ? 'bg-blue-50 text-blue-600 font-medium' : 'text-gray-600'}
+                ${active ? 'bg-blue-50 text-blue-600 font-medium border-r-4 border-blue-600' : 'text-gray-600'}
             `}
         >
             <span className="text-lg shrink-0">{icon}</span>

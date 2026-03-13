@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BannerController;
 use Inertia\Inertia;
 
 // Welcome Page
@@ -47,6 +48,14 @@ Route::middleware(['auth'])->group(function () {
         'update' => 'products.update',
         'destroy' => 'products.destroy',
     ]);
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/admin/banners', [BannerController::class, 'index'])->name('banners.index');
+    Route::post('/admin/banners', [BannerController::class, 'store'])->name('banners.store');
+    Route::put('/admin/banners/{banner}', [BannerController::class, 'update'])->name('banners.update');
+    
+    Route::delete('/admin/banners/{banner}', [BannerController::class, 'destroy'])->name('banners.destroy');
 });
 
 // Auth routes (login, register, password, etc.)
