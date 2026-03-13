@@ -1,17 +1,19 @@
 import NavLink from '@/Components/NavLink';
+import { useState } from 'react'; // Tambahkan useState
 import { 
     FaHome, FaUser, FaCog, FaBars, FaTimes, 
-    FaLayerGroup, FaBoxes, FaImages 
+    FaLayerGroup, FaBoxes, FaImages, FaChevronDown, FaDatabase 
 } from 'react-icons/fa';
 
 export default function Sidebar({ collapsed, setCollapsed, onNavigate }) {
+    // State untuk mengontrol dropdown Management
+    const [isManagementOpen, setIsManagementOpen] = useState(true);
+
     return (
         <div className="flex flex-col h-full">
             {/* Mobile Header */}
             <div className="flex md:hidden items-center justify-between px-4 h-16 border-b shrink-0">
-                <span className="font-bold text-lg text-blue-600">
-                    M SHOPPING
-                </span>
+                <span className="font-bold text-lg text-blue-600">M SHOPPING</span>
                 <button onClick={onNavigate} className="text-xl">
                     <FaTimes />
                 </button>
@@ -38,35 +40,53 @@ export default function Sidebar({ collapsed, setCollapsed, onNavigate }) {
                     onNavigate={onNavigate}
                 />
 
-                {/* --- Banner Management (New) --- */}
-                <NavItem
-                    href={route('banners.index')}
-                    active={route().current('banners.index')}
-                    icon={<FaImages />}
-                    label="Manage Banners"
-                    collapsed={collapsed}
-                    onNavigate={onNavigate}
-                />
+                {/* --- Parent Menu: Management --- */}
+                <div className="py-2">
+                    {!collapsed && (
+                        <button 
+                            onClick={() => setIsManagementOpen(!isManagementOpen)}
+                            className="flex items-center justify-between w-full px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-blue-600"
+                        >
+                            <span>Management</span>
+                            <FaChevronDown className={`transition-transform duration-200 ${isManagementOpen ? '' : '-rotate-90'}`} />
+                        </button>
+                    )}
+                    
+                    {/* Sub-items Container */}
+                    <div className={`${!collapsed && !isManagementOpen ? 'hidden' : 'block'} space-y-1 mt-1`}>
+                        <NavItem
+                            href={route('banners.index')}
+                            active={route().current('banners.*')}
+                            icon={<FaImages />}
+                            label="Manage Banners"
+                            collapsed={collapsed}
+                            onNavigate={onNavigate}
+                            isSubItem={!collapsed}
+                        />
 
-                {/* Category Management */}
-                <NavItem
-                    href={route('categories.index')}
-                    active={route().current('categories.index')}
-                    icon={<FaLayerGroup />}
-                    label="Categories"
-                    collapsed={collapsed}
-                    onNavigate={onNavigate}
-                />
+                        <NavItem
+                            href={route('categories.index')}
+                            active={route().current('categories.*')}
+                            icon={<FaLayerGroup />}
+                            label="Categories"
+                            collapsed={collapsed}
+                            onNavigate={onNavigate}
+                            isSubItem={!collapsed}
+                        />
 
-                {/* Product Management */}
-                <NavItem
-                    href={route('products.index')}
-                    active={route().current('products.index')}
-                    icon={<FaBoxes />}
-                    label="Products"
-                    collapsed={collapsed}
-                    onNavigate={onNavigate}
-                />
+                        <NavItem
+                            href={route('products.index')}
+                            active={route().current('products.*')}
+                            icon={<FaBoxes />}
+                            label="Products"
+                            collapsed={collapsed}
+                            onNavigate={onNavigate}
+                            isSubItem={!collapsed}
+                        />
+                    </div>
+                </div>
+
+                <div className="border-t my-2 border-gray-100"></div>
 
                 <NavItem
                     href={route('profile.edit')}
@@ -89,7 +109,7 @@ export default function Sidebar({ collapsed, setCollapsed, onNavigate }) {
     );
 }
 
-function NavItem({ href, icon, label, collapsed, active, onNavigate }) {
+function NavItem({ href, icon, label, collapsed, active, onNavigate, isSubItem }) {
     return (
         <NavLink
             href={href}
@@ -99,10 +119,11 @@ function NavItem({ href, icon, label, collapsed, active, onNavigate }) {
                 flex items-center gap-3 px-3 py-3 rounded-lg
                 transition hover:bg-gray-100
                 ${active ? 'bg-blue-50 text-blue-600 font-medium border-r-4 border-blue-600' : 'text-gray-600'}
+                ${isSubItem ? 'ml-4' : ''} 
             `}
         >
             <span className="text-lg shrink-0">{icon}</span>
-            {!collapsed && <span>{label}</span>}
+            {!collapsed && <span className="text-sm">{label}</span>}
         </NavLink>
     );
 }
